@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Age Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    input, button {
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Age Calculator</h1>
+  
+  <label for="dob">Enter your Date of Birth:</label><br>
+  <input type="date" id="dob" required />
+  <br>
+  <button onclick="calculateAge()">Calculate Age</button>
+
+  <h2 id="result"></h2>
+
+  <script>
+    async function calculateAge() {
+      const dob = document.getElementById('dob').value;
+
+      if (!dob) {
+        alert("Please select a date");
+        return;
+      }
+
+      const response = await fetch('http://localhost:3000/calculate-age', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dob })
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        document.getElementById('result').textContent = data.error;
+      } else {
+        document.getElementById('result').textContent = 
+          `You are ${data.years} years, ${data.months} months, and ${data.days} days old.`;
+      }
+    }
+  </script>
+</body>
+</html>
